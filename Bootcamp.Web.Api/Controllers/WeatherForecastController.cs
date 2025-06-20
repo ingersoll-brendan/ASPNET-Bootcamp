@@ -6,7 +6,7 @@ namespace Bootcamp.Web.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController(ILogger<WeatherForecastController> logger, Bootcamp1Context dbContext) : ControllerBase
+    public class WeatherForecastController(ILogger<WeatherForecastController> logger, BootcampContext dbContext) : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {

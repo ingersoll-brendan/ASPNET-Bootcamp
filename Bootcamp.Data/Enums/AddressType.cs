@@ -8,7 +8,7 @@ namespace Bootcamp.Data.Enums
 {
     public enum AddressType
     {
-        MailingAddress = 1,
+        BillingAddress = 1,
         ShippingAddress = 2
     }
 }

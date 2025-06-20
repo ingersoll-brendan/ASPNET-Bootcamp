@@ -25,10 +25,5 @@ namespace Bootcamp.Data.Entities
         public required string Name { get; set; }
 
         #endregion
-
-        public AddressType(string name)
-        {
-            Name = name;
-        }
     }
 }

@@ -11,10 +11,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string dbConnectionStringName = "Bootcamp1Database";
+//string dbConnectionStringName = "Bootcamp1Database";
+string dbConnectionStringName = "BootcampDatabase";
 var connectionString = builder.Configuration.GetConnectionString(dbConnectionStringName) ?? throw new InvalidOperationException($"Connection string '{dbConnectionStringName}' not found.");
 
-builder.Services.AddDbContext<Bootcamp1Context>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<BootcampContext>(options => options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

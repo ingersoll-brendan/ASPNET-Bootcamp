@@ -20,7 +20,7 @@ namespace Bootcamp.Data.Entities
         public required int CustomerId { get; set; }
 
         [Required]
-        public required int MailingAddressId { get; set; }
+        public required int BillingAddressId { get; set; }
 
         [Required]
         public required int ShippingAddressId { get; set; }
@@ -37,7 +37,7 @@ namespace Bootcamp.Data.Entities
         #region Navigation Properties
 
         public required Customer Customer { get; set; }
-        public required Address MailingAddress { get; set; }
+        public required Address BillingAddress { get; set; }
         public required Address ShippingAddress { get; set; }
 
         #endregion

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Bootcamp.Data.DbContexts
 {
-    public class Bootcamp1Context : DbContext
+    public class BootcampContext : DbContext
     {
-        public Bootcamp1Context(DbContextOptions<Bootcamp1Context> options): base(options)
+        public BootcampContext(DbContextOptions<BootcampContext> options): base(options)
         {
         }
 
@@ -21,5 +21,14 @@ namespace Bootcamp.Data.DbContexts
         public DbSet<Customer> Customers { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // TODO: 
+            //modelBuilder.Entity<Order>()
+            //    .HasMany(p => p.BillingAddress)
+            //    .WithOne(c => c.)
+            //    .OnDelete(DeleteBehavior.Cascade); // or Restrict, SetNull, etc.
+        }
     }
 }

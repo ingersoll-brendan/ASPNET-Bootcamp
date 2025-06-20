@@ -48,13 +48,5 @@ namespace Bootcamp.Data.Entities
 
         #endregion
 
-        public Address(string street1, string city, string state, int zip)
-        {
-            Street1 = street1;
-            City = city;
-            State = state;
-            Zip = zip;
-        }
-
     }
 }
