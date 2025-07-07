@@ -14,7 +14,7 @@ namespace Bootcamp.Data.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public required int CustomerId { get; set; }
@@ -32,13 +32,17 @@ namespace Bootcamp.Data.Entities
         [Required]
         public int OrderNumber { get; set; }
 
+        [Required]
+        public required DateTimeOffset DateCreated { get; set; }
+
+
         #endregion
 
         #region Navigation Properties
 
-        public required Customer Customer { get; set; }
-        public required Address BillingAddress { get; set; }
-        public required Address ShippingAddress { get; set; }
+        public Customer? Customer { get; set; }
+        public Address? BillingAddress { get; set; }
+        public Address? ShippingAddress { get; set; }
 
         #endregion
     }

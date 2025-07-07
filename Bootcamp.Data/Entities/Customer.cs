@@ -13,7 +13,13 @@ namespace Bootcamp.Data.Entities
         #region ID/Foreign Key Properties
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public required int Id { get; set; }
+        public int Id { get; set; }
+
+        [Required]
+        public required int[] AddressIds { get; set; } = [];
+
+        [Required]
+        public required int[] OrderIds { get; set; } = [];
 
         #endregion
 
@@ -38,8 +44,8 @@ namespace Bootcamp.Data.Entities
 
         #region Navigation Properties
 
-        public required ICollection<Address> Addresses { get; set; } = new List<Address>();
-        public required ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Address> Addresses { get; set; } = new List<Address>();
+        public ICollection<Order> Orders { get; set; } = new List<Order>();
 
         #endregion
     }

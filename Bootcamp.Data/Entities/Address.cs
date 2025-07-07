@@ -15,7 +15,13 @@ namespace Bootcamp.Data.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public required int Id { get; set; }
+        public int Id { get; set; }
+
+        [Required]
+        public required int AddressTypeId { get; set; }
+
+        [Required]
+        public required int CustomerId { get; set; }
 
         #endregion
 
@@ -43,8 +49,8 @@ namespace Bootcamp.Data.Entities
 
         #region Navigation Properties
 
-        [Required]
-        public required AddressType AddressType { get; set; }
+        public AddressType? AddressType { get; set; }
+        public Customer? Customer { get; set; }
 
         #endregion
 
