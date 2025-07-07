@@ -1,0 +1,57 @@
+﻿@page "/customers"
+@using Bootcamp.Client.Blazor.Constants 
+@using Bootcamp.Data.Entities
+@inject IHttpClientFactory HttpClientFactory
+
+<PageTitle>Customers</PageTitle>
+
+<h1>Customers</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (customerList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customerList)
+            {
+                <tr>
+                    <td><i class="bi bi-pencil"></i></td>
+                    <td>@customer.Id</td>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.PhoneNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Customer[]? customerList;
+    private HttpClient? _bootcampApiClient;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _bootcampApiClient = HttpClientFactory!.CreateClient(Constants.Bootcamp_ApiHttpClientName);
+        customerList = await _bootcampApiClient.GetFromJsonAsync<Customer[]>(Constants.Bootcamp_Customers);
+    }
+    //TODO: convert this to a separate code behind file
+    //TODO: create constructor with dependency injection of HttpClientFactory and set HttpClient and remove ?
+    //TODO: add an edit icon (pencil) to each customer row, research bootstrap icons https://icons.getbootstrap.com/?q=edit
+}

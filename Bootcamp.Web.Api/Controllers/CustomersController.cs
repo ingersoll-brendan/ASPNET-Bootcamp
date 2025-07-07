@@ -8,11 +8,11 @@ namespace Bootcamp.Web.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomersController : ControllerBase
     {
         private readonly BootcampContext _context;
 
-        public CustomerController(BootcampContext context)
+        public CustomersController(BootcampContext context)
         {
             _context = context;
         }
