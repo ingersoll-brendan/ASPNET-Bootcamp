@@ -16,10 +16,10 @@ namespace Bootcamp.Data.Entities
         public int Id { get; set; }
 
         [Required]
-        public required int[] AddressIds { get; set; } = [];
+        public int[] AddressIds { get; set; } = [];
 
         [Required]
-        public required int[] OrderIds { get; set; } = [];
+        public int[] OrderIds { get; set; } = [];
 
         #endregion
 
@@ -27,18 +27,18 @@ namespace Bootcamp.Data.Entities
 
         [Required]
         [MaxLength(50)]
-        public required string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public required string LastName { get; set; }
+        public string? LastName { get; set; }
 
         [Required]
         [MaxLength(255)]
-        public required string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
-        public required long PhoneNumber {  get; set; }
+        public long PhoneNumber {  get; set; }
 
         #endregion
 

@@ -1,7 +1,5 @@
 ﻿@page "/customers"
-@using Bootcamp.Client.Blazor.Constants 
 @using Bootcamp.Data.Entities
-@inject IHttpClientFactory HttpClientFactory
 
 <PageTitle>Customers</PageTitle>
 
@@ -9,7 +7,7 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (customerList == null)
+@if (customers.Length == 0)
 {
     <p><em>Loading...</em></p>
 }
@@ -27,10 +25,13 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var customer in customerList)
+            @foreach (var customer in customers)
             {
                 <tr>
-                    <td><i class="bi bi-pencil"></i></td>
+                    <td>
+                        <a href="/customers/edit/@customer.Id"><i class="bi bi-pencil"></i></a>
+                        <a><i class="bi bi-trash"></i></a>
+                    </td>
                     <td>@customer.Id</td>
                     <td>@customer.FirstName</td>
                     <td>@customer.LastName</td>
@@ -40,18 +41,4 @@ else
             }
         </tbody>
     </table>
-}
-
-@code {
-    private Customer[]? customerList;
-    private HttpClient? _bootcampApiClient;
-
-    protected override async Task OnInitializedAsync()
-    {
-        _bootcampApiClient = HttpClientFactory!.CreateClient(Constants.Bootcamp_ApiHttpClientName);
-        customerList = await _bootcampApiClient.GetFromJsonAsync<Customer[]>(Constants.Bootcamp_Customers);
-    }
-    //TODO: convert this to a separate code behind file
-    //TODO: create constructor with dependency injection of HttpClientFactory and set HttpClient and remove ?
-    //TODO: add an edit icon (pencil) to each customer row, research bootstrap icons https://icons.getbootstrap.com/?q=edit
 }

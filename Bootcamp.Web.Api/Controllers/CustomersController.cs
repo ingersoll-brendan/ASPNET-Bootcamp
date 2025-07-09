@@ -66,7 +66,7 @@ namespace Bootcamp.Web.Api.Controllers
                 }
             }
 
-            return NoContent();
+            return NoContent(); // 201
         }
 
         // POST: api/Customers
@@ -76,7 +76,7 @@ namespace Bootcamp.Web.Api.Controllers
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCustomer", new { id = customer.Id }, customer);
+            return CreatedAtAction("GetCustomer", customer);
         }
 
         // DELETE: api/Customers/5

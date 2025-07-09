@@ -1,0 +1,79 @@
+﻿@page "/customers/edit/{id:int}"
+@using Bootcamp.Client.Blazor.Services
+@using Bootcamp.Data.Entities
+@using Bootcamp.Client.Blazor.Config;
+@inject NavigationManager NavManager
+<h3>Customer Details</h3>
+
+@if(Customer == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div>First Name</div>
+    <input type="text" name="first_name" id="first_name" @bind="Customer!.FirstName" />
+    <div>Last Name</div>
+    <input type="text" name="last_name" id="last_name" @bind="Customer!.LastName" />
+    <div>Email</div>
+    <input type="text" name="email" id="email" @bind="Customer!.Email" />
+    <div>Phone Number</div>
+    <input type="text" name="phone_number" id="phone_number" @bind="Customer!.PhoneNumber" />
+    <br />
+    <button class="btn-primary" @onclick="this.SaveCustomer">Save</button>
+    <button class="btn" @onclick="this.GoBack">Back</button>
+}
+
+
+
+@code {
+    [Parameter] public int? Id { get; set; }
+    private Customer? Customer { get; set; }
+
+    [Inject]
+    public CustomerService CustomerService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(this.Id == null)
+        {
+            // If no ID is provided, we are creating a new customer
+            this.Customer = new Customer();
+            return;
+        }
+        else
+        {
+            this.Customer = await this.CustomerService.GetCustomerAsync(this.Id!.Value);
+        }
+
+        //TODO: load up the orders just like with the customers but into an arra
+        //TODO: Create an OrderService and use it to load the orders for the customer
+        // TODO: GetOrdersByCustomerIdAsync(int customerId) method in the OrderService
+        // TODO: Remove "require" modifier from the Entiity classes 
+    }
+
+    public async Task SaveCustomer()
+    {
+        if (this.Customer == null)
+        {
+            return;
+        }
+
+        if(this.Id == null)
+        {
+            // Create a new customer
+            // TODO: This usually returns an Id or the entire entity/object with the new Id set
+            this.Customer = await this.CustomerService.AddCustomerAsync(this.Customer);
+        }
+        else
+        {
+            // Update an existing customer
+            await this.CustomerService.UpdateCustomerAsync(this.Customer);
+        }
+    }
+
+    public void GoBack()
+    {
+        NavManager.NavigateTo("/customers");
+    }
+}
