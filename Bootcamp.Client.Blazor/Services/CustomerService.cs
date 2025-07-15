@@ -11,19 +11,17 @@ namespace Bootcamp.Client.Blazor.Services
 
         public async Task<Customer[]> GetCustomersAsync()
         {
-            // TODO: Use Constants
-            return await _httpClient.GetFromJsonAsync<Customer[]>("api/customers") ?? [];
+            return await _httpClient.GetFromJsonAsync<Customer[]>(Constants.Bootcamp_Customers) ?? [];
         }
 
         public async Task<Customer?> GetCustomerAsync(int id)
         {
-            // TODO: Use Constants
             return await _httpClient.GetFromJsonAsync<Customer>($"{Constants.Bootcamp_Customer.Replace("{id}", id.ToString())}");
         }
 
         public async Task<Customer> AddCustomerAsync(Customer customer)
         {
-            var response = await _httpClient.PostAsJsonAsync<Customer>("api/customers", customer);
+            var response = await _httpClient.PostAsJsonAsync<Customer>(Constants.Bootcamp_Customers, customer);
             response.EnsureSuccessStatusCode();
 
             var newCustomer = await response.Content.ReadFromJsonAsync<Customer>();
@@ -39,7 +37,7 @@ namespace Bootcamp.Client.Blazor.Services
 
         public async Task DeleteCustomerAsync(int id)
         {
-            var response = await _httpClient.DeleteAsync($"api/customers/{id}");
+            var response = await _httpClient.DeleteAsync($"{Constants.Bootcamp_Customer.Replace("{id}", id.ToString())}");
             response.EnsureSuccessStatusCode();
         }
     }

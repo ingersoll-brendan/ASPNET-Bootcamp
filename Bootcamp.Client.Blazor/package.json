@@ -1,0 +1,23 @@
+{
+  "name": "bootcamp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ingersoll-brendan/ASPNET-Bootcamp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ingersoll-brendan/ASPNET-Bootcamp/issues"
+  },
+  "homepage": "https://github.com/ingersoll-brendan/ASPNET-Bootcamp#readme",
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.3.7",
+    "bootstrap-icons": "^1.13.1"
+  }
+}

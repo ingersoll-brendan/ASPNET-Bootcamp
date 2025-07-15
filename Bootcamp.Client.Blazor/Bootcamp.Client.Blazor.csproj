@@ -51,9 +51,15 @@
     <Content Remove="C:\Users\Developer\.nuget\packages\bootstrap\5.3.7\contentFiles\any\any\wwwroot\js\bootstrap.js.map" />
     <Content Remove="C:\Users\Developer\.nuget\packages\bootstrap\5.3.7\contentFiles\any\any\wwwroot\js\bootstrap.min.js" />
     <Content Remove="C:\Users\Developer\.nuget\packages\bootstrap\5.3.7\contentFiles\any\any\wwwroot\js\bootstrap.min.js.map" />
+    <Content Remove="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Styles\app.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BuildWebCompiler2022" Version="1.14.15" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.16" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.16" PrivateAssets="all" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
@@ -64,7 +70,42 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\icons\" />
+    <Folder Include="wwwroot\font\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+  </ItemGroup>
+
+	
+	<ItemGroup>
+		 <BootstrapJsFiles Include="node_modules/bootstrap/dist/js/*.*" />
+	</ItemGroup>
+
+	<Target Name="CopyBootstrapJs" AfterTargets="Build">
+		 <Copy SourceFiles="@(BootstrapJsFiles)" DestinationFolder="wwwroot/js" SkipUnchangedFiles="true" />
+	</Target>
+	
+	
+	
+	<ItemGroup>
+		 <BootstrapIconFiles Include="node_modules/bootstrap-icons/icons/*.*" />
+	</ItemGroup>
+
+	<Target Name="CopyBootstrapIconFiles" AfterTargets="Build">
+		 <Copy SourceFiles="@(BootstrapIconFiles)" DestinationFolder="wwwroot/icons" SkipUnchangedFiles="true" />
+	</Target>
+
+
+	<ItemGroup>
+		 <BootstrapFontFiles Include="node_modules/bootstrap-icons/font/**/*.*" />
+	</ItemGroup>
+
+	<Target Name="CopyBootstrapFontFiles" AfterTargets="Build">
+		 <Copy SourceFiles="@(BootstrapFontFiles)" DestinationFolder="wwwroot/font/%(RecursiveDir)" SkipUnchangedFiles="true" />
+	</Target>
 
 </Project>
