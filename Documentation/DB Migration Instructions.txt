@@ -1,0 +1,5 @@
+In Package Manager Console:
+Select the project containing your DbContext as the default project (Bootcamp.Data).
+First create a migration: "Add-Migration {MigrationName}" specifying the migration name.
+Select the project that has the SQL connection string as the default project (Bootcamp.Web.Api).
+Then update the database: "Update-Database"

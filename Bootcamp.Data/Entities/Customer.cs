@@ -16,12 +16,6 @@ namespace Bootcamp.Data.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 
-		[Required]
-		public int[] AddressIds { get; set; } = [];
-
-		[Required]
-		public int[] OrderIds { get; set; } = [];
-
 		#endregion
 
 		#region Attribute Properties
@@ -37,13 +31,13 @@ namespace Bootcamp.Data.Entities
 		[Required(ErrorMessage = "Email is Required")]
 		[MaxLength(255, ErrorMessage = "Email cannot be longer than 255 characters")]
 		[RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]
-		//TODO: Add regular expressions for email
 		public string? Email { get; set; }
 
 
 		// TODO: Change PhoneNumber to string and add validation for phone number format using Regex
 		[Required(ErrorMessage = "Phone Number is Required")]
-		public long PhoneNumber { get; set; }
+		[MaxLength(10, ErrorMessage = "Phone Number cannot be longer than 50 characters")]
+		public string? PhoneNumber { get; set; }
 
 		#endregion
 
