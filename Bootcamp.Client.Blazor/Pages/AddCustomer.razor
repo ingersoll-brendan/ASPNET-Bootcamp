@@ -6,17 +6,38 @@
 
 <h3>Add New Customer</h3>
 
-<div>First Name</div>
-<input type="text" name="first_name" id="first_name" @bind="Customer!.FirstName" />
-<div>Last Name</div>
-<input type="text" name="last_name" id="last_name" @bind="Customer!.LastName" />
-<div>Email</div>
-<input type="text" name="email" id="email" @bind="Customer!.Email" />
-<div>Phone Number</div>
-<input type="text" name="phone_number" id="phone_number" @bind="Customer!.PhoneNumber" />
-<br />
-<button class="btn-primary" @onclick="this.SaveCustomer">Save</button>
-<button class="btn" @onclick="this.GoBack">Back</button>
+<EditForm Model="@Customer" OnValidSubmit="this.SaveCustomer">
+    <DataAnnotationsValidator />
+    <div class="row">
+        <div class="form-group col-12 col-md-6 mb-3">
+            <label for="customerFirstName">First Name</label>
+            <InputText class="form-control" id="customerFirstName" @bind-Value="Customer!.FirstName" />
+            <ValidationMessage For="() => Customer.FirstName" />
+        </div>
+
+        <div class="form-group col-12 col-md-6 mb-3">
+            <label for="customerLastName">Last Name</label>
+            <InputText class="form-control" id="customerLastName" @bind-Value="Customer!.LastName" />
+            <ValidationMessage For="() => Customer.LastName" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-12 col-md-6 mb-3">
+            <label for="customerEmail">Email</label>
+            <InputText class="form-control" id="customerEmail" @bind-Value="Customer!.Email" />
+            <ValidationMessage For="() => Customer.Email" />
+        </div>
+
+        <div class="form-group col-12 col-md-6 mb-3">
+            <label for="customerPhoneNumber">Phone Number</label>
+            <InputNumber class="form-control" id="customerPhoneNumber" @bind-Value="Customer!.PhoneNumber" />
+            <ValidationMessage For="() => this.Customer.PhoneNumber" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button class="btn border" @onclick="this.GoBack">Back</button>
+</EditForm>
 
 @code {
     private Customer? Customer { get; set; }

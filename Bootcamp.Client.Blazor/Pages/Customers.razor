@@ -7,7 +7,9 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-<a href="/customers/add">Add New Customer</a>
+<a href="/customers/add">Add New</a>
+
+<button class="btn">Add New Customer</button>
 
 @if (customers.Length == 0)
 {
@@ -31,7 +33,7 @@ else
             {
                 <tr>
                     <td>
-                        <a href="/customers/edit/@customer.Id"><i class="bi bi-pencil"></i></a>
+                        <a href="/customers/edit/@customer.Id"><i class="bi bi-pencil text-primary text-secondary-hover"></i></a>
                         <a><i class="bi bi-trash"></i></a>
                     </td>
                     <td>@customer.Id</td>
