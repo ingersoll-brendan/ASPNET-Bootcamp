@@ -100,9 +100,23 @@ namespace Bootcamp.Web.Api.Controllers
             return NoContent();
         }
 
-        private bool AddressExists(int id)
+		// GET: api/Addresses/Customer/{customerId}
+		[HttpGet("Customer/{customerId}")]
+		public async Task<ActionResult<IEnumerable<Address>>> GetAddressesByCustomerId(int customerId)
+        {
+            var addresses = await _context.Addresses
+                .Include(a => a.AddressType)
+                .Where(a => a.CustomerId == customerId).ToListAsync();
+
+            return addresses;
+
+		}
+
+		private bool AddressExists(int id)
         {
             return _context.Addresses.Any(e => e.Id == id);
         }
+
+        
     }
 }

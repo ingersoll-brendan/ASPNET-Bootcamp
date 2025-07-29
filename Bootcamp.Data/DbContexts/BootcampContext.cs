@@ -24,11 +24,9 @@ namespace Bootcamp.Data.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // TODO: 
-            //modelBuilder.Entity<Order>()
-            //    .HasMany(p => p.BillingAddress)
-            //    .WithOne(c => c.)
-            //    .OnDelete(DeleteBehavior.Cascade); // or Restrict, SetNull, etc.
-        }
+			modelBuilder.Entity<Order>()
+		        .Property(b => b.DateCreated)
+		        .HasDefaultValueSql("GETDATE()");
+		}
     }
 }

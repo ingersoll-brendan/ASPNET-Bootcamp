@@ -16,34 +16,40 @@ namespace Bootcamp.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        [Required]
-        public required int CustomerId { get; set; }
+        [Required(ErrorMessage = "CustomerId is Required")]
+        public int CustomerId { get; set; }
 
-        [Required]
-        public required int BillingAddressId { get; set; }
+        [Required(ErrorMessage = "Billing Address Id is Required")]
+        public int BillingAddressId { get; set; }
 
-        [Required]
-        public required int ShippingAddressId { get; set; }
+        [Required(ErrorMessage = "Shipping Address Id is Required")]
+        public int ShippingAddressId { get; set; }
 
         #endregion
 
         #region Attribute Properties
 
-        [Required]
-        public int OrderNumber { get; set; }
+        //TODO: Do we need this? I feel like ID serves the same function
+        [Required(ErrorMessage = "Order Number is Required")]
+        public string OrderNumber { get; set; }
 
-        [Required]
-        public required DateTimeOffset DateCreated { get; set; }
+        [Required(ErrorMessage = "Date Created is Required")]
+        public DateTimeOffset? DateCreated { get; set; }
+
+        [Required(ErrorMessage = "Order Description is Required")]
+        [MaxLength(200, ErrorMessage = "Order Description cannot be longer than 200 characters")]
+		public string? OrderDescription { get; set; }
 
 
-        #endregion
 
-        #region Navigation Properties
+		#endregion
 
-        public Customer? Customer { get; set; }
+		#region Navigation Properties
+
+		public Customer? Customer { get; set; }
         public Address? BillingAddress { get; set; }
         public Address? ShippingAddress { get; set; }
 
-        #endregion
-    }
+		#endregion
+	}
 }

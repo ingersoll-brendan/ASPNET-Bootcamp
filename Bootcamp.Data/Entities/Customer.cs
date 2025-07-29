@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Bootcamp.Data.Entities
 {
-	public class Customer
+	public class Customer : IValidatableObject
 	{
 		#region ID/Foreign Key Properties
 		[Key]
@@ -30,13 +30,12 @@ namespace Bootcamp.Data.Entities
 
 		[Required(ErrorMessage = "Email is Required")]
 		[MaxLength(255, ErrorMessage = "Email cannot be longer than 255 characters")]
-		[RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]
+		[RegularExpression("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", ErrorMessage = "Email must be in the proper format")]
 		public string? Email { get; set; }
 
-
-		// TODO: Change PhoneNumber to string and add validation for phone number format using Regex
 		[Required(ErrorMessage = "Phone Number is Required")]
-		[MaxLength(10, ErrorMessage = "Phone Number cannot be longer than 50 characters")]
+		[MaxLength(15, ErrorMessage = "Phone Number cannot be longer than 15 characters")]
+		[RegularExpression(@"^\(\d{3}\)\s?\d{3}-\d{4}$", ErrorMessage = "Phone Number must be in the proper format, ex: (123)456-7890")]
 		public string? PhoneNumber { get; set; }
 
 		#endregion
@@ -47,5 +46,21 @@ namespace Bootcamp.Data.Entities
 		public ICollection<Order> Orders { get; set; } = new List<Order>();
 
 		#endregion
+
+		public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+		{
+			foreach (var address in Addresses)
+			{
+				var results = new List<ValidationResult>();
+				var context = new ValidationContext(address);
+				Validator.TryValidateObject(address, context, results, true);
+
+				foreach (var result in results)
+				{
+					// Prefix the error with something to indicate which address
+					yield return new ValidationResult($"Address: {result.ErrorMessage}", result.MemberNames);
+				}
+			}
+		}
 	}
 }

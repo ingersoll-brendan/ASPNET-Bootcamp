@@ -1,8 +1,11 @@
 ﻿using Bootcamp.Data.DbContexts;
+using Bootcamp.Data.Dtos;
 using Bootcamp.Data.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Bootcamp.Web.Api.Controllers
 {
@@ -17,20 +20,87 @@ namespace Bootcamp.Web.Api.Controllers
             _context = context;
         }
 
-        // GET: api/Customers
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+		// GET: api/Customers
+		[HttpGet]
+        public async Task<ActionResult<CustomerSearchResult>> GetCustomers(
+            int skip = 0, 
+            int take = 5, 
+            bool descending = false, 
+            int? id = null, 
+            string? firstName = null, 
+            string? lastName = null, 
+            string? email = null, 
+            string? phoneNumber = null, 
+            string? orderBy = null) 
         {
-            return await _context.Customers.ToListAsync();
-        }
+			//NOTE: Alternative way to load customers with their included address objects for frontend if desired
+			//return await _context.Customers.Include(c => c.Addresses).ToListAsync();
+			//return await _context.Customers.ToListAsync();
+		    var searchQuery = _context.Customers.AsQueryable();
+			if (id != null && id > 0)
+			{
+				searchQuery = searchQuery.Where(c => c.Id.Equals(id));
+			}
+			if (!string.IsNullOrWhiteSpace(firstName))
+            {
+                searchQuery = searchQuery.Where(c => c.FirstName != null && c.FirstName.Contains(firstName));
+            }
+			if (!string.IsNullOrWhiteSpace(lastName))
+			{
+				searchQuery = searchQuery.Where(c => c.LastName != null && c.LastName.Contains(lastName));
+			}
+			if (!string.IsNullOrWhiteSpace(email))
+			{
+				searchQuery = searchQuery.Where(c => c.Email != null && c.Email.Contains(email));
+			}
+			if (!string.IsNullOrWhiteSpace(phoneNumber))
+			{
+				searchQuery = searchQuery.Where(c => c.PhoneNumber != null && c.PhoneNumber.Contains(phoneNumber));
+			}
+            if(!string.IsNullOrWhiteSpace(orderBy))
+            {
+                if(orderBy == "Id")
+                {
+					searchQuery = descending ? searchQuery.OrderByDescending(c => c.Id) : searchQuery.OrderBy(c => c.Id);
+                }
+                else if(orderBy == "FirstName")
+				{
+					searchQuery = descending ? searchQuery.OrderByDescending(c => c.FirstName) : searchQuery.OrderBy(c => c.FirstName);
+				}
+                else if(orderBy == "LastName")
+                {
+                    searchQuery = descending ? searchQuery.OrderByDescending(c => c.LastName) : searchQuery.OrderBy(c => c.LastName);
+                }
+                else if(orderBy == "Email")
+                {
+                    searchQuery = descending ? searchQuery.OrderByDescending(c => c.Email) : searchQuery.OrderBy(c => c.Email);
+                }
+                else if(orderBy == "PhoneNumber")
+                {
+                    searchQuery = descending ? searchQuery.OrderByDescending(c => c.PhoneNumber) : searchQuery.OrderBy(c => c.PhoneNumber);
+				}
+			}
 
-        // GET: api/Customers/5
-        [HttpGet("{id}")]
+			var customers = await searchQuery.Skip(skip).Take(take).ToListAsync();
+            var customerCount = searchQuery.Skip(0).Count();
+
+			return new CustomerSearchResult
+            {
+                Customers = customers,
+                Count = customerCount
+            };
+		}
+
+		// GET: api/Customers/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
+			//NOTE: Alternative way to load customers with their included address objects for frontend if desired
+            //var customer = await _context.Customers.Include(c => c.Addresses).SingleOrDefaultAsync((c => c.Id == id));
+			var customer = await _context.Customers.FindAsync(id);
 
-            if(customer == null)
+
+            if (customer == null)
             {
                 return NotFound();
             }
@@ -47,8 +117,20 @@ namespace Bootcamp.Web.Api.Controllers
             {
                 return BadRequest();
             }
+			customer.PhoneNumber = Regex.Replace(customer.PhoneNumber ?? "", @"[^\d]", "");
+			_context.Entry(customer).State = EntityState.Modified;
 
-            _context.Entry(customer).State = EntityState.Modified;
+            foreach(var address in customer.Addresses)
+            {
+                if(address.Id == 0)
+                {
+                    _context.Entry(address).State = EntityState.Added;
+                }
+                else
+                {
+                    _context.Entry(address).State = EntityState.Modified;
+				}
+			}
 
             try
             {
@@ -73,6 +155,7 @@ namespace Bootcamp.Web.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
+            customer.PhoneNumber = Regex.Replace(customer.PhoneNumber ?? "", @"[^\d]", "");
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 

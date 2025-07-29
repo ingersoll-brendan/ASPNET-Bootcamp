@@ -1,11 +1,11 @@
-﻿@page "/customers"
+﻿@page "/orders"
 @using Bootcamp.Data.Entities
 
-<PageTitle>Customers</PageTitle>
+<PageTitle>Orders</PageTitle>
 
 <div class="row justify-content-end">
 	<div class="col-12">
-		<h1>Customers</h1>
+		<h1>Orders</h1>
 
 		<p>This component demonstrates fetching data from the server.</p>
 	</div>
@@ -13,7 +13,7 @@
 <div class="row align-items-end">
 	<!-- Column 1: Button -->
 	<div class="col-9">
-		<a href="/customers/edit/0" class="btn btn-primary" role="button">Add New Customer</a>
+		<a href="" class="btn btn-primary" role="button">Add New Order (Admin)</a>
 	</div>
 
 	<!-- Column 2: Icon, bottom-right -->
@@ -42,32 +42,38 @@
 		<tr class="collapse" id="filterRow">
 			<td><button class="btn btn-primary" @onclick="() => this.UpdateFilters()">Apply Filters</button></td>
 			<td><input class="form-control" @bind="Id" /></td>
-			<td><input class="form-control" @bind="FirstName" /></td>
-			<td><input class="form-control" @bind="LastName" /></td>
-			<td><input class="form-control" @bind="Email" /></td>
-			<td><input class="form-control" @bind="PhoneNumber" /></td>
+			<td><input class="form-control" @bind="CustomerId" /></td>
+			<td><input class="form-control" @bind="BillingAddressId" /></td>
+			<td><input class="form-control" @bind="ShippingAddressId" /></td>
+			<td><input class="form-control" @bind="OrderNumber" /></td>
+			<td><input class="form-control" @bind="DateCreated" /></td>
+			<td><input class="form-control" @bind="OrderDescription" /></td>
 		</tr>
 		<tr>
 			<th></th>
 			<th>Id <i class="btn bi @SortArray[0] p-0" @onclick="() => ChangeSortOrder(0)"></i></th>
-			<th>First Name <i class="btn bi @SortArray[1] p-0" @onclick="() => ChangeSortOrder(1)"></i></th>
-			<th>Last Name <i class="btn bi @SortArray[2] p-0" @onclick="() => ChangeSortOrder(2)"></i></th>
-			<th>Email <i class="btn bi @SortArray[3] p-0" @onclick="() => ChangeSortOrder(3)"></i></th>
-			<th>Phone Number <i class="btn bi @SortArray[4] p-0" @onclick="() => ChangeSortOrder(4)"></i></th>
+			<th>Customer Id <i class="btn bi @SortArray[1] p-0" @onclick="() => ChangeSortOrder(1)"></i></th>
+			<th>Billing Address Id <i class="btn bi @SortArray[2] p-0" @onclick="() => ChangeSortOrder(2)"></i></th>
+			<th>Shipping Address Id <i class="btn bi @SortArray[3] p-0" @onclick="() => ChangeSortOrder(3)"></i></th>
+			<th>Order Number <i class="btn bi @SortArray[4] p-0" @onclick="() => ChangeSortOrder(4)"></i></th>
+			<th>Date Created <i class="btn bi @SortArray[5] p-0" @onclick="() => ChangeSortOrder(5)"></i></th>
+			<th>Order Description <i class="btn bi @SortArray[6] p-0" @onclick="() => ChangeSortOrder(6)"></i></th>
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var customer in this.CustomerSearchResult.Customers)
+		@foreach (var order in this.OrderSearchResult.Orders)
 		{
 			<tr>
 				<td>
-					<a href="/customers/edit/@customer.Id"><i class="bi bi-pencil text-primary text-secondary-hover"></i></a>
+					<a href=""><i class="bi bi-pencil text-primary text-secondary-hover"></i></a>
 				</td>
-				<td>@customer.Id</td>
-				<td>@customer.FirstName</td>
-				<td>@customer.LastName</td>
-				<td>@customer.Email</td>
-				<td>@customer.PhoneNumber</td>
+				<td>@order.Id</td>
+				<td>@order.CustomerId</td>
+				<td>@order.BillingAddressId</td>
+				<td>@order.ShippingAddressId</td>
+				<td>@order.OrderNumber</td>
+				<td>@order.DateCreated</td>
+				<td>@order.OrderDescription</td>
 			</tr>
 		}
 	</tbody>

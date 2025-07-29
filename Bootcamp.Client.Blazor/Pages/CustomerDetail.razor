@@ -2,117 +2,286 @@
 @using Bootcamp.Client.Blazor.Services
 @using Bootcamp.Data.Entities
 @using Bootcamp.Client.Blazor.Config;
+@using System.Text.RegularExpressions
 @inject NavigationManager NavManager
-<h3>Customer Details</h3>
-
-@if(Customer == null)
+@if(this.Id == null)
 {
-    <p><em>Loading...</em></p>
+	<h3>New Customer</h3>
 }
 else
 {
-
-    <EditForm Model="@Customer" OnValidSubmit="this.SaveCustomer">
-        <DataAnnotationsValidator />
-        <div class="row">
-            <div class="form-group col-12 col-md-6 mb-3">
-                <label for="customerFirstName">First Name</label>
-                <InputText class="form-control" id="customerFirstName" @bind-Value="Customer!.FirstName" />
-                <ValidationMessage For="() => Customer.FirstName"/>
-            </div>
-
-            <div class="form-group col-12 col-md-6 mb-3">
-                <label for="customerLastName">Last Name</label>
-                <InputText class="form-control" id="customerLastName" @bind-Value="Customer!.LastName" />
-                <ValidationMessage For="() => Customer.LastName" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-group col-12 col-md-6 mb-3">
-                <label for="customerEmail">Email</label>
-                <InputText class="form-control" id="customerEmail" @bind-Value="Customer!.Email" />
-                <ValidationMessage For="() => Customer.Email" />
-            </div>
-
-            <div class="form-group col-12 col-md-6 mb-3">
-                <label for="customerPhoneNumber">Phone Number</label>
-                <InputNumber class="form-control" id="customerPhoneNumber" @bind-Value="Customer!.PhoneNumber" />
-                <ValidationMessage For="() => this.Customer.PhoneNumber" />
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save</button>
-        <button class="btn border" @onclick="this.GoBack">Back</button>
-        <button class="btn btn-danger" @onclick="this.DeleteCustomer">Delete</button>
-    </EditForm>
-
-    <br />
-    
+	<h3>Customer Details</h3>
 }
+
+@if(EditContext != null)
+{
+	<EditForm EditContext="@EditContext" OnValidSubmit="this.OnSaveCustomer">
+		<DataAnnotationsValidator />
+		<div class="row">
+			<div class="form-group col-12 col-md-6 mb-3">
+				<label for="customerFirstName">First Name</label>
+				<InputText class="form-control" id="customerFirstName" @bind-Value="Customer!.FirstName" />
+				<ValidationMessage For="() => Customer.FirstName" />
+			</div>
+
+			<div class="form-group col-12 col-md-6 mb-3">
+				<label for="customerLastName">Last Name</label>
+				<InputText class="form-control" id="customerLastName" @bind-Value="Customer!.LastName" />
+				<ValidationMessage For="() => Customer.LastName" />
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-12 col-md-6 mb-3">
+				<label for="customerEmail">Email</label>
+				<InputText class="form-control" id="customerEmail" @bind-Value="Customer!.Email" />
+				<ValidationMessage For="() => Customer.Email" />
+			</div>
+
+			<div class="form-group col-12 col-md-6 mb-3">
+				<label for="customerPhoneNumber">Phone Number</label>
+				<InputText class="form-control" id="customerPhoneNumber" @bind-Value="Customer!.PhoneNumber" />
+				<ValidationMessage For="() => Customer.PhoneNumber" />
+			</div>
+		</div>
+
+
+		<button type="submit" class="btn btn-primary">Save</button>
+		<button type="button" class="btn border" @onclick="this.GoBack">Back</button>
+		@if(this.Id != 0)
+		{
+			<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete">Delete</button>
+		}
+
+		@* TODO: Investigate why modal isnt working *@
+		<div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="confirmDeleteLabel">Confirm Customer Deletion</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						Are you sure you'd like to delete this customer?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-danger" @onclick="this.DeleteCustomer" data-bs-dismiss="modal">Confirm Delete</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</EditForm>
+}
+
+<br>
+<h4>Customer Addresses</h4>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>Id</th>
+			<th>Line 1</th>
+			<th>Line 2</th>
+			<th>City</th>
+			<th>State</th>
+			<th>Zip</th>
+			<th>Address Type</th>
+			<th>Customer ID</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (this.Customer != null)
+		{
+			@foreach (var address in this.Customer.Addresses)
+			{
+				<tr>
+					<td>@address.Id</td>
+					<td>@address.Street1</td>
+					@if (address.Street2 != null)
+					{
+						<td>@address.Street2</td>
+					}
+					else
+					{
+						<td>(None)</td>
+					}
+					<td>@address.City</td>
+					<td>@address.State</td>
+					<td>@address.Zip</td>
+					<td>@address.AddressType?.Name</td>
+					<td>@address.CustomerId</td>
+				</tr>
+			}
+		}
+
+	</tbody>
+</table>
+<br />
+
+<button class="btn btn-primary" @onclick="this.OnAddNewAddress">
+	Add New Address
+</button>
+@if (NewAddress != null)
+{
+
+	<EditForm Model="@NewAddress" OnValidSubmit="this.OnSaveAddress">
+		<DataAnnotationsValidator />
+		<div class="row" id="newAddressRow">
+
+			<div class="form-group col">
+				<label>Address Type:</label>
+				@* TODO: Investigate how to keep blank while forcing user to select a value *@
+				<InputSelect class="form-select" @bind-Value="NewAddress!.AddressTypeId">
+					<option value="0" selected>-- Select Option --</option>
+					<option value="1">Billing</option>
+					<option value="2">Shipping</option>
+				</InputSelect>
+				<ValidationMessage For="() => NewAddress.AddressTypeId" />
+			</div>
+
+			<div class="form-group col">
+				<label>Street Line 1:</label>
+				<InputText class="form-control" @bind-Value="NewAddress!.Street1" />
+				<ValidationMessage For="() => NewAddress.Street1" />
+			</div>
+
+			<div class="form-group col">
+				<label>Street Line 2:</label>
+				<InputText class="form-control" @bind-Value="NewAddress!.Street2" />
+				<ValidationMessage For="() => NewAddress.Street2" />
+			</div>
+
+			<div class="form-group col">
+				<label>City:</label>
+				<InputText class="form-control" @bind-Value="NewAddress!.City" />
+				<ValidationMessage For="() => NewAddress.City" />
+			</div>
+
+			<div class="form-group col">
+				<label>State:</label>
+				<InputText class="form-control" @bind-Value="NewAddress!.State" />
+				<ValidationMessage For="() => NewAddress.State" />
+			</div>
+
+			<div class="form-group col">
+				<label>Zip Code:</label>
+				<InputNumber class="form-control" @bind-Value="NewAddress!.Zip" />
+				<ValidationMessage For="() => NewAddress.Zip" />
+			</div>
+
+			<div class="col d-flex flex-column justify-content-end">
+				<button type="submit" class="btn btn-primary">Save Address</button>
+			</div>
+
+		</div>
+
+
+	</EditForm>
+}
+
 
 
 
 @code {
-    [Parameter] public int? Id { get; set; }
-    private Customer? Customer { get; set; }
+	[Parameter] public int? Id { get; set; }
+	private EditContext EditContext { get; set; }
+	private Customer? Customer { get; set; }
+	private Address? NewAddress { get; set; }
 
-    [Inject]
-    public CustomerService CustomerService { get; set; } = default!;
+	[Inject]
+	public CustomerService CustomerService { get; set; } = default!;
+	[Inject]
+	public AddressService AddressService { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
-    {
-        if(this.Id == null)
-        {
-            // If no ID is provided, we are creating a new customer
-            this.Customer = new Customer();
-            return;
-        }
-        else
-        {
-            this.Customer = await this.CustomerService.GetCustomerAsync(this.Id!.Value);
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
 
-    public async Task SaveCustomer()
-    {
-        if (this.Customer == null)
-        {
-            return;
-        }
+		if (this.Id == 0)
+		{
+			// If no ID is provided, we are creating a new customer
+			this.Customer = new Customer();
+		}
+		else
+		{
+			this.Customer = await this.CustomerService.GetCustomerAsync(this.Id!.Value);
 
-        if(this.Id == null)
-        {
-            // Create a new customer
-            // TODO: This usually returns an Id or the entire entity/object with the new Id set
-            this.Customer = await this.CustomerService.AddCustomerAsync(this.Customer);
-        }
-        else
-        {
-            // Update an existing customer
-            await this.CustomerService.UpdateCustomerAsync(this.Customer);
-        }
-    }
+			//NOTE: only include this code if the server side isnt including the address information in the above call
+			// This way can be preferred for performance reasons, because using a JOIN can slow down queries and this would allow us to display the customer fields while we load the address information in the background
+			if (this.Customer != null)
+			{
+				var addresses = await this.AddressService.GetAddressesByCustomerIdAsync(this.Id!.Value);
+				this.Customer.Addresses = new List<Address>(addresses);
+			}
 
-    public async void DeleteCustomer()
-    {
-        if (this.Customer == null)
-        {
-            return;
-        }
+			if (Regex.IsMatch(Customer.PhoneNumber, @"^\d{10}$"))
+			{
+				Customer.PhoneNumber = Regex.Replace(Customer.PhoneNumber, @"(\d{3})(\d{3})(\d{4})", "($1)$2-$3");
+			}
+		}
+		this.EditContext = new EditContext(this.Customer);
+	}
 
-        if(this.Id == null)
-        {
-            return;
-        }
-        else
-        {
-            await this.CustomerService.DeleteCustomerAsync(this.Id!.Value);
-            this.GoBack();
-        }
-    }
+	public async Task OnSaveCustomer()
+	{
+		if (this.Customer == null)
+		{
+			return;
+		}
 
-    public void GoBack()
-    {
-        NavManager.NavigateTo("/customers");
-    }
+		if (this.Id == 0)
+		{
+			// Create a new customer
+			this.Customer = await this.CustomerService.AddCustomerAsync(this.Customer);
+		}
+		else
+		{
+			// Update an existing customer
+			await this.CustomerService.UpdateCustomerAsync(this.Customer);
+		}
+		this.GoBack();
+	}
+
+	public void OnSaveAddress()
+	{
+		if (this.NewAddress == null || this.Customer == null)
+		{
+			return;
+		}
+		this.NewAddress.CustomerId = this.Customer.Id;
+		this.Customer.Addresses.Add(this.NewAddress);
+		this.NewAddress = null;
+	}
+
+	public async void DeleteCustomer()
+	{
+		if (this.Customer == null)
+		{
+			return;
+		}
+
+		if (this.Id == null)
+		{
+			return;
+		}
+		else
+		{
+			foreach (var address in this.Customer.Addresses)
+			{
+				await this.AddressService.DeleteAddressAsync(address.Id);
+			}
+			await this.CustomerService.DeleteCustomerAsync(this.Id!.Value);
+			this.GoBack();
+		}
+	}
+
+	public void OnAddNewAddress()
+	{
+		this.NewAddress = new Address();
+		this.NewAddress.AddressTypeId = (int)Bootcamp.Data.Enums.AddressType.ShippingAddress;
+	}
+
+	public void GoBack()
+	{
+		NavManager.NavigateTo("/customers");
+	}
 }

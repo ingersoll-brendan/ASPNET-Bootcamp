@@ -14,5 +14,13 @@ public static class Constants
     public const string Bootcamp_Customers = "customers";
     public const string Bootcamp_Customer = "customers/{id}";
 
-    #endregion
+    public const string Bootcamp_Addresses = "addresses";
+    public const string Bootcamp_Address = "addresses/{id}";
+    public const string Bootcamp_AddressesByCustomerId = "addresses/customer/{id}";
+
+    public const string Bootcamp_Orders = "orders";
+    public const string Bootcamp_Order = "orders/{id}";
+    public const string Bootcamp_OrdersByCustomerId = "orders/customer/{id}";
+
+	#endregion
 }

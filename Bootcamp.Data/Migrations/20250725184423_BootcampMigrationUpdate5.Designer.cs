@@ -4,6 +4,7 @@ using Bootcamp.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bootcamp.Data.Migrations
 {
     [DbContext(typeof(BootcampContext))]
-    partial class BootcampContextModelSnapshot : ModelSnapshot
+    [Migration("20250725184423_BootcampMigrationUpdate5")]
+    partial class BootcampMigrationUpdate5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,8 @@ namespace Bootcamp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AddressTypeId")
+                    b.Property<int?>("AddressTypeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("City")
@@ -135,18 +139,15 @@ namespace Bootcamp.Data.Migrations
 
                     b.Property<DateTimeOffset?>("DateCreated")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("OrderDescription")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("OrderNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<int>("ShippingAddressId")
                         .HasColumnType("int");
