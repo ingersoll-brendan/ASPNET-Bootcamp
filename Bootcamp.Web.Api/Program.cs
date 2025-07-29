@@ -30,7 +30,9 @@ builder.Services.AddCors(options =>
     options.AddPolicy("BlazorWasmPolicy", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7079") // Change to your Blazor WASM origin
+            .WithOrigins("https://localhost:7079", 
+                "https://symmsoft-bootcamp-client-int.azurewebsites.net", 
+                "https://symmsoft-bootcamp-client-prod.azurewebsites.net/") // Add other deployed front-end url domains.
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
