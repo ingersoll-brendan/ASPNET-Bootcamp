@@ -29,7 +29,6 @@ namespace Bootcamp.Data.Entities
 
         #region Attribute Properties
 
-        //TODO: Do we need this? I feel like ID serves the same function
         [Required(ErrorMessage = "Order Number is Required")]
         public string OrderNumber { get; set; }
 
