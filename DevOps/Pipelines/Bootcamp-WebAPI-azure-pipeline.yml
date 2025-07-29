@@ -76,14 +76,14 @@ stages:
     environment: 'INT'
     strategy:
       runOnce:
-      deploy:
-        steps:
-          - template: 'Templates/deploy-app-service.yml'
-            parameters:
-              env: 'INT'
-              connectedServiceName: $(ConnectedServiceName_NonProd)
-              webAppName: $(AppServiceNamePrefix)
-              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+        deploy:
+          steps:
+            - template: 'Templates/deploy-app-service.yml'
+              parameters:
+                env: 'INT'
+                connectedServiceName: $(ConnectedServiceName_NonProd)
+                webAppName: $(AppServiceNamePrefix)
+                packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
 
 
 # -------------------------------------
