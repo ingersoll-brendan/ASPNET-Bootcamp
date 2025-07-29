@@ -54,7 +54,7 @@ stages:
       displayName: 'Publish Artifacts to Staging Directory'
       inputs:
         command: publish
-        projects: '**/Bootcamp.Web.Api.csproj' # <-- Set specific project because there are multiple app projects
+        projects: 'Bootcamp.Web.Api/Bootcamp.Web.Api.csproj' # <-- Set specific project because there are multiple app projects
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: True
 
