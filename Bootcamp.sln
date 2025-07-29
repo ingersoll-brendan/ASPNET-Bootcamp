@@ -14,6 +14,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 		Documentation\DB Migration Instructions.txt = Documentation\DB Migration Instructions.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DevOps", "DevOps", "{F60CA295-4BF5-4D1A-9774-CD136B5F03C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipelines", "Pipelines", "{38744673-56B7-49DD-9921-71EA66F0DA5C}"
+	ProjectSection(SolutionItems) = preProject
+		DevOps\Pipelines\Bootcamp-Client-azure-pipeline.yml = DevOps\Pipelines\Bootcamp-Client-azure-pipeline.yml
+		DevOps\Pipelines\Bootcamp-WebAPI-azure-pipeline.yml = DevOps\Pipelines\Bootcamp-WebAPI-azure-pipeline.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{4DDD274A-AE0D-4C3F-ABE5-3E4FADDA782E}"
+	ProjectSection(SolutionItems) = preProject
+		DevOps\Pipelines\Templates\deploy-app-service.yml = DevOps\Pipelines\Templates\deploy-app-service.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +48,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{38744673-56B7-49DD-9921-71EA66F0DA5C} = {F60CA295-4BF5-4D1A-9774-CD136B5F03C9}
+		{4DDD274A-AE0D-4C3F-ABE5-3E4FADDA782E} = {38744673-56B7-49DD-9921-71EA66F0DA5C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D903023-525A-4839-8A9D-B2DC0B45E968}

@@ -1,0 +1,175 @@
+# ASP.NET
+# Build and test ASP.NET projects.
+# Add steps that publish symbols, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
+
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- group: 'SYMMSOFT Bootcamp'
+- name: solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'Any CPU'
+- name: buildConfiguration
+  value: 'Release'  
+
+# -------------------------------------
+# CI: Build/Publish Solution
+# ------------------------------------
+stages:
+- stage: 'CI'
+  displayName: 'Build'
+  jobs:
+  - job: 'BuildSolutionJob'
+    displayName: 'Build/Publish VS Solution'
+    cancelTimeoutInMinutes: 10
+    continueOnError: false
+    steps:
+
+    # Not needed unless we want a specific version - Latest Windows includes 7.x.x
+    # NOTE: May slow down build if not in cache
+    # Ensure DotNet SDK installed
+    - task: UseDotNet@2
+      displayName: 'Install DotNetCore SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '8.x'
+        includePreviewVersions: false
+
+    # Build solution (all projects) and store in staging artifact directory
+    - task: DotNetCoreCLI@2
+      displayName: 'Build VS Solution'
+      inputs:
+        command: 'build'
+        projects: $(solution)
+        arguments: '/p:WarningLevel=0 /clp:ErrorsOnly --configuration $(buildConfiguration)' # <-- Output errors only to console
+
+    # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Artifacts to Staging Directory'
+      inputs:
+        command: publish
+        publishWebProjects: true
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+
+    # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
+    - publish: '$(build.artifactStagingDirectory)'
+      artifact: 'AppPackage'
+      displayName: 'Publish Artifacts to Pipeline Run Directory' 
+
+
+# NOT CURRENTLY USED
+## -------------------------------------
+## CD: Deploy INT
+## -------------------------------------
+#- stage: 'CD_INT'
+#  dependsOn: 'CI'
+#  displayName: 'Deploy INT'
+#  jobs:
+#  - deployment: 
+#    displayName: 'Deploy App Service'
+#    environment: 'INT'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - template: 'templates/deploy-app-service.yml'
+#            parameters:
+#              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
+#              env: 'INT'
+#              connectedServiceName: $(ConnectedServiceName_NonProd)
+#              webAppName: $(AppServiceNamePrefix_OtaConnector)
+#              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+
+
+# NOT CURRENTLY USED
+## -------------------------------------
+## CD: Deploy INT Post-Approval (Gate for allowing QA personnel to approve deployment to QA)
+## -------------------------------------
+#- stage: 'CD_INT_POST_APPROVAL'
+#  dependsOn: 'CD_INT'
+#  displayName: 'INT - Post-Approval'
+#  jobs:
+#  - deployment: 
+#    displayName: 'Post-Approval Check'
+#    environment: 'INT Post-Approval'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:
+#          - script: echo 'Waiting for INT personnel to approve stage before allowing QA approval/deployment'
+
+# NOT CURRENTLY USED
+## -------------------------------------
+## CD: Deploy QA
+## -------------------------------------
+#- stage: 'CD_QA'
+#  dependsOn: 'CD_INT_POST_APPROVAL'
+#  displayName: 'Deploy QA'
+#  jobs:
+#  - deployment: 
+#    displayName: 'Deploy App Service'
+#    environment: 'QA'
+#    strategy:
+#      runOnce:
+#        deploy:
+#          steps:          
+#          - template: 'templates/deploy-app-service.yml'
+#            parameters:
+#              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
+#              env: 'QA'
+#              connectedServiceName: $(ConnectedServiceName_NonProd) 
+#              webAppName: $(AppServiceNamePrefix_OtaConnector)
+#              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+
+
+# -------------------------------------
+# CD: Deploy UAT
+# -------------------------------------
+- stage: 'CD_UAT'
+  dependsOn: 'CI' # <-- Change to CD_INT_POST_APPROVAL if INT/QA environment is used
+  displayName: 'Deploy UAT'
+  jobs:
+  - deployment: 
+    displayName: 'Deploy App Service'
+    environment: 'UAT'
+    strategy:
+      runOnce:
+        deploy:
+          steps:          
+          - template: 'templates/deploy-app-service.yml'
+            parameters:
+              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
+              env: 'UAT'
+              connectedServiceName: $(ConnectedServiceName_NonProd) 
+              webAppName: $(AppServiceNamePrefix_OtaConnector)
+              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+
+
+# -------------------------------------
+# CD: Deploy PROD
+# -------------------------------------
+- stage: 'CD_PROD'
+  dependsOn: 'CD_UAT'
+  displayName: 'Deploy PROD'
+  jobs:
+  - deployment: 
+    displayName: 'Deploy App Service'
+    environment: 'PROD'
+    strategy:
+      runOnce:
+        deploy:
+          steps:          
+          - template: 'templates/deploy-app-service.yml'
+            parameters:
+              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
+              env: 'PROD'
+              connectedServiceName: $(ConnectedServiceName_Prod) 
+              webAppName: $(AppServiceNamePrefix_OtaConnector)
+              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'

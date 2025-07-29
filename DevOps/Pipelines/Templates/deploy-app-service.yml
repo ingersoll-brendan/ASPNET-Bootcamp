@@ -1,0 +1,19 @@
+# Template for deploying packaged application to app service.
+parameters:
+  courtName: ''
+  env: ''
+  connectedServiceName: ''
+  webAppName: ''
+  packageForLinux: ''
+
+steps:
+# Downloads all Artifacts currently published in current Pipeline process
+- download: current
+  displayName: 'Downloading Artifacts'
+- task: AzureRmWebAppDeployment@4
+  displayName: 'Deploy App to Azure App Service'
+  inputs:
+    azureSubscription: ${{ parameters.connectedServiceName }}
+    appType: webAppLinux
+    WebAppName:  '${{ parameters.webAppName }}-${{ parameters.env }}-${{ parameters.courtName }}' 
+    packageForLinux: ${{ parameters.packageForLinux }}
