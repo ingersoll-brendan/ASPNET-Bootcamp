@@ -64,46 +64,43 @@ stages:
       displayName: 'Publish Artifacts to Pipeline Run Directory' 
 
 
-# NOT CURRENTLY USED
-## -------------------------------------
-## CD: Deploy INT
-## -------------------------------------
-#- stage: 'CD_INT'
-#  dependsOn: 'CI'
-#  displayName: 'Deploy INT'
-#  jobs:
-#  - deployment: 
-#    displayName: 'Deploy App Service'
-#    environment: 'INT'
-#    strategy:
-#      runOnce:
-#        deploy:
-#          steps:
-#          - template: 'templates/deploy-app-service.yml'
-#            parameters:
-#              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
-#              env: 'INT'
-#              connectedServiceName: $(ConnectedServiceName_NonProd)
-#              webAppName: $(AppServiceNamePrefix_OtaConnector)
-#              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+# -------------------------------------
+# CD: Deploy INT
+# -------------------------------------
+- stage: 'CD_INT'
+  dependsOn: 'CI'
+  displayName: 'Deploy INT'
+  jobs:
+  - deployment: 
+    displayName: 'Deploy App Service'
+    environment: 'INT'
+    strategy:
+      runOnce:
+      deploy:
+        steps:
+          - template: 'Templates/deploy-app-service.yml'
+            parameters:
+              env: 'INT'
+              connectedServiceName: $(ConnectedServiceName_NonProd)
+              webAppName: $(AppServiceNamePrefix)
+              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
 
 
-# NOT CURRENTLY USED
-## -------------------------------------
-## CD: Deploy INT Post-Approval (Gate for allowing QA personnel to approve deployment to QA)
-## -------------------------------------
-#- stage: 'CD_INT_POST_APPROVAL'
-#  dependsOn: 'CD_INT'
-#  displayName: 'INT - Post-Approval'
-#  jobs:
-#  - deployment: 
-#    displayName: 'Post-Approval Check'
-#    environment: 'INT Post-Approval'
-#    strategy:
-#      runOnce:
-#        deploy:
-#          steps:
-#          - script: echo 'Waiting for INT personnel to approve stage before allowing QA approval/deployment'
+# -------------------------------------
+# CD: Deploy INT Post-Approval (Gate for allowing QA personnel to approve deployment to QA)
+# -------------------------------------
+- stage: 'CD_INT_POST_APPROVAL'
+  dependsOn: 'CD_INT'
+  displayName: 'INT - Post-Approval'
+  jobs:
+  - deployment: 
+    displayName: 'Post-Approval Check'
+    environment: 'INT Post-Approval'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo 'Waiting for INT personnel to approve stage before allowing QA approval/deployment'
 
 # NOT CURRENTLY USED
 ## -------------------------------------
@@ -120,43 +117,41 @@ stages:
 #      runOnce:
 #        deploy:
 #          steps:          
-#          - template: 'templates/deploy-app-service.yml'
+#          - template: 'Templates/deploy-app-service.yml'
 #            parameters:
-#              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
 #              env: 'QA'
 #              connectedServiceName: $(ConnectedServiceName_NonProd) 
-#              webAppName: $(AppServiceNamePrefix_OtaConnector)
+#              webAppName: $(AppServiceNamePrefix)
 #              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
 
 
 # -------------------------------------
 # CD: Deploy UAT
 # -------------------------------------
-- stage: 'CD_UAT'
-  dependsOn: 'CI' # <-- Change to CD_INT_POST_APPROVAL if INT/QA environment is used
-  displayName: 'Deploy UAT'
-  jobs:
-  - deployment: 
-    displayName: 'Deploy App Service'
-    environment: 'UAT'
-    strategy:
-      runOnce:
-        deploy:
-          steps:          
-          - template: 'templates/deploy-app-service.yml'
-            parameters:
-              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
-              env: 'UAT'
-              connectedServiceName: $(ConnectedServiceName_NonProd) 
-              webAppName: $(AppServiceNamePrefix_OtaConnector)
-              packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
+# - stage: 'CD_UAT'
+#   dependsOn: 'CI' <-- Change to CD_INT_POST_APPROVAL if INT/QA environment is used
+#   displayName: 'Deploy UAT'
+#   jobs:
+#   - deployment: 
+#     displayName: 'Deploy App Service'
+#     environment: 'UAT'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:          
+#           - template: 'Templates/deploy-app-service.yml'
+#             parameters:
+#               env: 'UAT'
+#               connectedServiceName: $(ConnectedServiceName_NonProd) 
+#               webAppName: $(AppServiceNamePrefix)
+#               packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'
 
 
 # -------------------------------------
 # CD: Deploy PROD
 # -------------------------------------
 - stage: 'CD_PROD'
-  dependsOn: 'CD_UAT'
+  dependsOn: 'CD_INT_POST_APPROVAL'
   displayName: 'Deploy PROD'
   jobs:
   - deployment: 
@@ -166,10 +161,9 @@ stages:
       runOnce:
         deploy:
           steps:          
-          - template: 'templates/deploy-app-service.yml'
+          - template: 'Templates/deploy-app-service.yml'
             parameters:
-              courtName: $(courtName) # Provided at runtime as a Pipeline Variable
               env: 'PROD'
               connectedServiceName: $(ConnectedServiceName_Prod) 
-              webAppName: $(AppServiceNamePrefix_OtaConnector)
+              webAppName: $(AppServiceNamePrefix)
               packageForLinux: '$(Pipeline.Workspace)/AppPackage/*.zip'

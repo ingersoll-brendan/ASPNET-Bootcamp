@@ -1,6 +1,5 @@
 # Template for deploying packaged application to app service.
 parameters:
-  courtName: ''
   env: ''
   connectedServiceName: ''
   webAppName: ''
@@ -15,5 +14,5 @@ steps:
   inputs:
     azureSubscription: ${{ parameters.connectedServiceName }}
     appType: webAppLinux
-    WebAppName:  '${{ parameters.webAppName }}-${{ parameters.env }}-${{ parameters.courtName }}' 
+    WebAppName:  '${{ parameters.webAppName }}-${{ parameters.env }}' 
     packageForLinux: ${{ parameters.packageForLinux }}
