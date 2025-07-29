@@ -49,11 +49,12 @@ builder.Services.AddDbContext<BootcampContext>(options => options.UseSqlServer(c
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+/* Enable for all environments - In order to see */
+//if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Integration"))
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
 app.UseCors("BlazorWasmPolicy");
 
