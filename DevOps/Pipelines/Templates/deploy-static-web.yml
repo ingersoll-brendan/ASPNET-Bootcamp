@@ -12,7 +12,7 @@ steps:
 - task: AzureStaticWebApp@0
   displayName: ${{parameters.displayName}}
   inputs:
-    app_location: '/wwwroot' #Set this an empty string ('') when bypassing automatic build and only deploy is required.
+    app_location: '' #Set this an empty string ('') when bypassing automatic build and only deploy is required.
     skip_app_build: true
     skip_api_build: true
     cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}'   
