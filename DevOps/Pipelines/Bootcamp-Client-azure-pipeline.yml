@@ -70,15 +70,15 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(blazorProject)'
-        arguments: '--configuration $(buildConfiguration) --output --output $(Build.ArtifactStagingDirectory)/build'
+        projects: '$(Build.SourcesDirectory)\Bootcamp.Client.Blazor\Bootcamp.Client.Blazor.csproj'
+        arguments: '--configuration $(buildConfiguration) --output --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: False # We do not want a zip file published.
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Blazor WASM Artifact'
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/build/Bootcamp.Client.Blazor'
+        targetPath: '$(Build.ArtifactStagingDirectory)/Bootcamp.Client.Blazor'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
 
