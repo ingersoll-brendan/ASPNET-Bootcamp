@@ -12,7 +12,8 @@ steps:
 - task: AzureStaticWebApp@0
   displayName: ${{parameters.displayName}}
   inputs:
-    app_location: '' #Set this an empty string ('') when bypassing automatic build and only deploy is required.
+    app_location: '/wwwroot'  # Specify location the current build files (Blazor is wwwroot)
+    output_location: '' # Leave this empty - we are not building in this task
     skip_app_build: true
     skip_api_build: true
     cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}'   
