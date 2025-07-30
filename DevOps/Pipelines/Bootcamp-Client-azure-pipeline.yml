@@ -78,7 +78,7 @@ stages:
       displayName: 'Publish Blazor WASM Artifact'
       inputs:
         targetPath: '$(outputDir)/wwwroot'
-        artifact: 'blazorwasm'
+        artifact: '$(artifactName)'
         publishLocation: 'pipeline'
 
 
