@@ -25,7 +25,7 @@ variables:
 - name: 'appName'
   value: 'SYMMSOFT-Bootcamp-Client'
 - name: 'artifactName'
-  value: 'Bootcamp'
+  value: 'blazorwasm'
 
 pool:
   vmImage: 'windows-latest'
@@ -74,9 +74,12 @@ stages:
         arguments: '--configuration $(buildConfiguration) --output $(outputDir)'
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
-    - publish: '$(build.artifactStagingDirectory)'
-      artifact: '$(artifactName)'
-      displayName: 'Publish Artifacts to Pipeline Run Directory' 
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Blazor WASM Artifact'
+      inputs:
+        targetPath: '$(outputDir)/wwwroot'
+        artifact: 'blazorwasm'
+        publishLocation: 'pipeline'
 
 
 
