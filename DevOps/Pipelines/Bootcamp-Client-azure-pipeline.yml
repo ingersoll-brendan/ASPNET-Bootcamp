@@ -20,10 +20,8 @@ variables:
 - group: 'SYMMSOFT Bootcamp'
 - name: 'buildConfiguration'
   value: 'Release'
-- name: 'outputDir'
-  value: '$(Build.ArtifactStagingDirectory)/build'
 - name: 'blazorProject'
-  value: 'Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj' # Adjust if your Blazor project is not at the root
+  value: 'Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj'
 - name: 'appName'
   value: 'SYMMSOFT-Bootcamp-Client'
 - name: 'artifactName'
@@ -73,14 +71,14 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(blazorProject)'
-        arguments: '--configuration $(buildConfiguration) --output $(outputDir)'
+        arguments: '--configuration $(buildConfiguration) --output --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: False # We do not want a zip file published.
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Blazor WASM Artifact'
       inputs:
-        targetPath: '$(outputDir)/Bootcamp.Client.Blazor/wwwroot'
+        targetPath: '$(Build.ArtifactStagingDirectory)/Bootcamp.Client.Blazor/wwwroot'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
 
