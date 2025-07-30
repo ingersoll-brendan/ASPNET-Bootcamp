@@ -74,7 +74,7 @@ stages:
         publishWebProjects: false
         projects: '$(blazorProject)'
         arguments: '--configuration $(buildConfiguration) --output $(outputDir)'
-        zipAfterPublish: True
+        zipAfterPublish: False
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
     - task: PublishPipelineArtifact@1

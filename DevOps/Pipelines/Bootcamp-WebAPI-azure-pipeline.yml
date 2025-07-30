@@ -64,7 +64,7 @@ stages:
         projects: '$(Build.SourcesDirectory)\Bootcamp.Web.Api\Bootcamp.Web.Api.csproj' # Set specific project because there are multiple app projects
         publishWebProjects: false # Set to false if not a web project, or if you want granular control
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-        zipAfterPublish: False
+        zipAfterPublish: True
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
     - publish: '$(build.artifactStagingDirectory)'
