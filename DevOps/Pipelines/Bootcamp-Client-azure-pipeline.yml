@@ -14,6 +14,10 @@ variables:
   buildConfiguration: 'Release'
   outputDir: '$(Build.ArtifactStagingDirectory)/client'
   blazorProject: '**/Bootcamp.Client.Blazor.csproj' # Adjust if your Blazor project is not at the root
+- name: 'appName'
+  value: 'SYMMSOFT-Bootcamp-Client'
+- name: 'artifactName'
+  value: 'BootcampClient'
 
 pool:
   vmImage: 'ubuntu-latest'
