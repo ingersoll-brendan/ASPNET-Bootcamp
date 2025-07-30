@@ -28,7 +28,7 @@ variables:
   value: 'blazorwasm'
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 # -------------------------------------
 # CI: Build/Publish Solution
