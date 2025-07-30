@@ -30,7 +30,7 @@ namespace Bootcamp.Data.Entities
         #region Attribute Properties
 
         [Required(ErrorMessage = "Order Number is Required")]
-        public string OrderNumber { get; set; }
+        public string? OrderNumber { get; set; }
 
         [Required(ErrorMessage = "Date Created is Required")]
         public DateTimeOffset? DateCreated { get; set; }

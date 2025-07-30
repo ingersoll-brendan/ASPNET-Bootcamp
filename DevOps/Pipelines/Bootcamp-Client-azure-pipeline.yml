@@ -3,7 +3,7 @@
 # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=azure-devops
 
 trigger:
-- main
+- master
 
 # Pipeline Variable - Define as a Pipeline Variable
 # Add if needed using following format
@@ -58,7 +58,8 @@ stages:
         command: 'build'
         projects: '$(blazorProject)'
         arguments: '--configuration $(buildConfiguration)'
-
+    
+    # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
     - task: DotNetCoreCLI@2
       displayName: 'Publish'
       inputs:
@@ -67,7 +68,10 @@ stages:
         projects: '$(blazorProject)'
         arguments: '--configuration $(buildConfiguration) --output $(outputDir)'
 
-
+    # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
+    - publish: '$(build.artifactStagingDirectory)'
+      artifact: '$(artifactName)'
+      displayName: 'Publish Artifacts to Pipeline Run Directory' 
 
 
 
