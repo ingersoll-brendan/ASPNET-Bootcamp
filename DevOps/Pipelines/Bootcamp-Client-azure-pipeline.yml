@@ -68,7 +68,7 @@ stages:
     
     # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
     - task: DotNetCoreCLI@2
-      displayName: 'Publish Build Files to Folder'
+      displayName: 'Publish Build Files to Bin Folder'
       inputs:
         command: 'publish'
         publishWebProjects: false
@@ -77,12 +77,9 @@ stages:
         zipAfterPublish: False
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Blazor WASM Artifact to Pipeline Run'
-      inputs:
-        targetPath: '$(outputDir)/wwwroot'
-        artifact: '$(artifactName)'
-        publishLocation: 'pipeline'
+    - publish: '$(build.artifactStagingDirectory)'
+      artifact: '$(artifactName)'
+      displayName: 'Publish Artifacts to Pipeline Run Directory' 
 
 
 
