@@ -9,6 +9,8 @@ trigger:
   paths:
     exclude:
       - Bootcamp.Web.Api/**
+      - DevOps/**
+      - Documentation/**
 
 # Pipeline Variable - Define as a Pipeline Variable
 # Add if needed using following format
@@ -19,7 +21,7 @@ variables:
 - name: 'buildConfiguration'
   value: 'Release'
 - name: 'outputDir'
-  value: '$(Build.ArtifactStagingDirectory)/client'
+  value: '$(Build.ArtifactStagingDirectory)/build'
 - name: 'blazorProject'
   value: 'Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj' # Adjust if your Blazor project is not at the root
 - name: 'appName'

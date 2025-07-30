@@ -10,6 +10,8 @@ trigger:
   paths:
     exclude:
       - Bootcamp.Client.Blazor/**
+      - DevOps/**
+      - Documentation/**
 
 pool:
   vmImage: 'windows-latest'

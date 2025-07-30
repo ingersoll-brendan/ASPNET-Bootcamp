@@ -17,7 +17,8 @@ steps:
 - task: AzureStaticWebApp@0
   displayName: ${{parameters.displayName}}
   inputs:
-    app_location: '/'
+    app_location: '/' # Root of artifact
     skip_app_build: true
     skip_api_build: true
     output_location: '$(Pipeline.Workspace)/${{parameters.artifactName}}'
+    azure_static_web_apps_api_token: ${{parameters.deploymentToken}}
