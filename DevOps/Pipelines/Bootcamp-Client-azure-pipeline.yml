@@ -3,7 +3,13 @@
 # https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=azure-devops
 
 trigger:
-- master
+  branches:
+    include:
+      - master
+  paths:
+    include:
+      - Bootcamp.Client.Blazor/**
+      - Bootcamp.Data/** # must include data because it is a shared project
 
 # Pipeline Variable - Define as a Pipeline Variable
 # Add if needed using following format
