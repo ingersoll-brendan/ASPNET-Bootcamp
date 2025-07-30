@@ -8,9 +8,8 @@ trigger:
     include:
       - master
   paths:
-    include:
-      - Bootcamp.Web.Api/**
-      - Bootcamp.Data/** # must include data because it is a shared project
+    exclude:
+      - Bootcamp.Client.Blazor/**
 
 pool:
   vmImage: 'windows-latest'

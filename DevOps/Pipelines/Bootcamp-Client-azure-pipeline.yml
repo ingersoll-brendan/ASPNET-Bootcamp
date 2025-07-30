@@ -7,9 +7,8 @@ trigger:
     include:
       - master
   paths:
-    include:
-      - Bootcamp.Client.Blazor/**
-      - Bootcamp.Data/** # must include data because it is a shared project
+    exclude:
+      - Bootcamp.Web.Api/**
 
 # Pipeline Variable - Define as a Pipeline Variable
 # Add if needed using following format
@@ -29,7 +28,7 @@ variables:
   value: 'Bootcamp'
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 # -------------------------------------
 # CI: Build/Publish Solution
