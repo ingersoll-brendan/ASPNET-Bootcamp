@@ -16,7 +16,7 @@ variables:
 - name: 'outputDir'
   value: '$(Build.ArtifactStagingDirectory)/client'
 - name: 'blazorProject'
-  value: '**/Bootcamp.Client.Blazor.csproj' # Adjust if your Blazor project is not at the root
+  value: 'Bootcamp.Web.Api/Bootcamp.Web.Api.csproj' # Adjust if your Blazor project is not at the root
 - name: 'appName'
   value: 'SYMMSOFT-Bootcamp-Client'
 - name: 'artifactName'
