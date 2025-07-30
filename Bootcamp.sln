@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{4DDD274A-AE0D-4C3F-ABE5-3E4FADDA782E}"
 	ProjectSection(SolutionItems) = preProject
 		DevOps\Pipelines\Templates\deploy-app-service.yml = DevOps\Pipelines\Templates\deploy-app-service.yml
+		DevOps\Pipelines\Templates\deploy-static-web.yml = DevOps\Pipelines\Templates\deploy-static-web.yml
 	EndProjectSection
 EndProject
 Global

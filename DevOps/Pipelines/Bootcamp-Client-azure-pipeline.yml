@@ -1,0 +1,165 @@
+# Azure Static Web Apps
+# Build and test Azure Static Web Apps.
+# https://learn.microsoft.com/en-us/azure/static-web-apps/build-configuration?tabs=azure-devops
+
+trigger:
+- main
+
+# Pipeline Variable - Define as a Pipeline Variable
+# Add if needed using following format
+#- name: {name}
+#  value: {value}
+variables:
+- group: 'SYMMSOFT Bootcamp'
+  buildConfiguration: 'Release'
+  outputDir: '$(Build.ArtifactStagingDirectory)/client'
+  blazorProject: '**/Bootcamp.Client.Blazor.csproj' # Adjust if your Blazor project is not at the root
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# -------------------------------------
+# CI: Build/Publish Solution
+# ------------------------------------
+stages:
+- stage: 'CI'
+  displayName: 'Build'
+  jobs:
+  - job: 'BuildSolutionJob'
+    displayName: 'Build Static Web App'
+    cancelTimeoutInMinutes: 10
+    continueOnError: false
+    steps:
+
+    # Set the pipeline build number (so it appears in Azure DevOps UI)
+    - task: UseDotNet@2
+      displayName: 'Install .NET SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore NuGet packages'
+      inputs:
+        command: 'restore'
+        projects: '$(blazorProject)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        projects: '$(blazorProject)'
+        arguments: '--configuration $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(blazorProject)'
+        arguments: '--configuration $(buildConfiguration) --output $(outputDir)'
+
+
+
+
+
+## -------------------------------------
+## CD: Deploy INT
+## -------------------------------------
+- stage: 'CD_INT'
+  dependsOn: 'CI'
+  displayName: 'Deploy INT'
+  jobs:
+  - deployment:
+    displayName: 'Deploy Static Web App (INT)'
+    environment: 'INT'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - template: 'Templates/deploy-static-web.yml'
+            parameters:
+              artifactName: '$(artifactName)'
+              displayName: '$(appName) INT'
+              deploymentToken: '$(swa_deployment_token_int)'
+
+
+## -------------------------------------
+## CD: Deploy INT Post-Approval (Gate for allowing QA personnel to approve deployment to QA)
+## -------------------------------------
+- stage: 'CD_INT_POST_APPROVAL'
+  dependsOn: 'CD_INT'
+  displayName: 'Post-Approval INT'
+  jobs:
+  - deployment:
+    displayName: 'Post-Approval Check'
+    environment: 'INT Post-Approval'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo 'Waiting for INT personnel to approve stage before allowing QA approval/deployment'
+
+
+# -------------------------------------
+# CD: Deploy QA
+# -------------------------------------
+# - stage: 'CD_QA'
+#   dependsOn: 'CD_INT_POST_APPROVAL'
+#   displayName: 'Deploy QA'
+#   jobs:
+#   - deployment:
+#     displayName: 'Deploy Static Web App (QA)'
+#     environment: 'QA'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - template: 'Templates/deploy-static-web.yml'
+#             parameters:
+#               artifactName: '$(artifactName)'
+#               displayName: '$(appName) QA'
+#               deploymentToken: '$(swa_deployment_token_qa)'
+
+
+# -------------------------------------
+# CD: Deploy UAT
+# -------------------------------------
+# - stage: 'CD_UAT'
+#   dependsOn: 'CD_QA' 
+#   displayName: 'Deploy UAT'
+#   jobs:
+#   - deployment:
+#     displayName: 'Deploy Static Web App (UAT)'
+#     environment: 'UAT'
+#     strategy:
+#       runOnce:
+#         deploy:
+#           steps:
+#           - template: 'Templates/deploy-static-web.yml'
+#             parameters:
+#               artifactName: '$(artifactName)'
+#               displayName: '$(appName) UAT'
+#               deploymentToken: '$(swa_deployment_token_uat)'
+
+
+# -------------------------------------
+# CD: Deploy PROD
+# -------------------------------------
+- stage: 'CD_PROD'
+  dependsOn: 'CD_INT_POST_APPROVAL'
+  displayName: 'Deploy PROD'
+  jobs:
+  - deployment:
+    displayName: 'Deploy Static Web App (PROD)'
+    environment: 'PROD'
+    strategy:
+      runOnce:
+        deploy:
+         steps:
+         - template: 'Templates/deploy-static-web.yml'
+           parameters:
+             artifactName: '$(artifactName)'
+             displayName: '$(appName) PROD'
+             deploymentToken: '$(swa_deployment_token_prod)'
