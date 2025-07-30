@@ -51,8 +51,15 @@ builder.Services.AddDbContext<BootcampContext>(options => options.UseSqlServer(c
 
 var app = builder.Build();
 
+// Apply our DB Migrations (i.e. create DB if not exist, create Tables if not exist, apply changes if exist, seed any required data)
+using (var scope = app.Services.CreateScope())
+{
+	var db = scope.ServiceProvider.GetRequiredService<BootcampContext>();
+	db.Database.Migrate(); // This applies any pending migrations
+}
+
 // Configure the HTTP request pipeline.
-/* Enable for all environments - In order to see */
+/* Enable for all environments for testing purposes */
 //if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Integration"))
 //{
 //    app.UseSwagger();
