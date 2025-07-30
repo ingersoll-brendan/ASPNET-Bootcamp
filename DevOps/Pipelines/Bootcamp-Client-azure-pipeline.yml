@@ -70,7 +70,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(Build.SourcesDirectory)\Bootcamp.Client.Blazor\Bootcamp.Client.Blazor.csproj'
+        projects: '$(Build.SourcesDirectory)/Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj'
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: False # We do not want a zip file published.
 
