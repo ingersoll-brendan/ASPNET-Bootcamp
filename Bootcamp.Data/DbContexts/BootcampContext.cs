@@ -27,6 +27,11 @@ namespace Bootcamp.Data.DbContexts
 			modelBuilder.Entity<Order>()
 		        .Property(b => b.DateCreated)
 		        .HasDefaultValueSql("GETDATE()");
+
+            modelBuilder.Entity<AddressType>().HasData(
+                new AddressType { Id = 1, Name = "Billing" },
+                new AddressType { Id = 2, Name = "Shipping" }
+                );
 		}
     }
 }
