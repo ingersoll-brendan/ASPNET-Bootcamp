@@ -1,5 +1,6 @@
 ﻿using Bootcamp.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace Bootcamp.Data.DbContexts
 		        .Property(b => b.DateCreated)
 		        .HasDefaultValueSql("GETDATE()");
 
+            //seed initial database
             modelBuilder.Entity<AddressType>().HasData(
                 new AddressType { Id = 1, Name = "Billing" },
                 new AddressType { Id = 2, Name = "Shipping" }
