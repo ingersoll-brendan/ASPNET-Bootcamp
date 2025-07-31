@@ -71,17 +71,46 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(Build.SourcesDirectory)/$(blazorProjectName)/$(blazorProjectName).csproj'
-        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/Release'
+        zipAfterPublish: False # We do not want a zip file published.
+
+
+    # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Build Files to Int Bin Folder'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(Build.SourcesDirectory)/$(blazorProjectName)/$(blazorProjectName).csproj'
+        arguments: '--configuration Int --output $(Build.ArtifactStagingDirectory)/Int'
         zipAfterPublish: False # We do not want a zip file published.
 
     # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish Blazor WASM Artifact'
+      displayName: 'Publish Blazor WASM Artifact - Int'
       inputs:
         targetPath: '$(Build.ArtifactStagingDirectory)/$(blazorProjectName)'
-        artifact: '$(artifactName)'
+        artifact: '$(artifactName)-Int'
         publishLocation: 'pipeline'
 
+
+    # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Build Files to Release Bin Folder'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(Build.SourcesDirectory)/$(blazorProjectName)/$(blazorProjectName).csproj'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/Release'
+        zipAfterPublish: False # We do not want a zip file published.
+
+    # Publish staging artifacts to Pipeline Run directory (so other stages/steps can access files)
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Blazor WASM Artifact - Release'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(blazorProjectName)'
+        artifact: '$(artifactName)-Release'
+        publishLocation: 'pipeline'
 
 
 ## -------------------------------------
@@ -103,6 +132,7 @@ stages:
               artifactName: '$(artifactName)'
               displayName: '$(appName) INT'
               deploymentToken: '$(swa_deployment_token_int)'
+              environment: 'Int'
 
 
 ## -------------------------------------
@@ -183,3 +213,4 @@ stages:
              artifactName: '$(artifactName)'
              displayName: '$(appName) PROD'
              deploymentToken: '$(swa_deployment_token_prod)'
+             environment: 'Release'

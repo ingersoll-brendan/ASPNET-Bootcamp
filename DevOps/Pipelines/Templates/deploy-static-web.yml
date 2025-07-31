@@ -5,10 +5,14 @@ parameters:
   artifactName: ''
   displayName: ''
   deploymentToken: ''
+  environement: ''
 
 steps:
 - download: current
   artifact: ${{parameters.artifactName}}
+
+  # TODO: Use the file copy task to copy the appopraite AppSettings.${{environment}}.json
+  # into the wwwroot folder (replace the existing AppSettings.json)
 - task: AzureStaticWebApp@0
   displayName: ${{parameters.displayName}}
   inputs:
@@ -16,6 +20,6 @@ steps:
     output_location: '' # Leave this empty - we are not building in this task
     skip_app_build: true
     skip_api_build: true
-    cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}'   
+    cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}-${{environment}}'   
     azure_static_web_apps_api_token: ${{parameters.deploymentToken}}
     verbose: True
