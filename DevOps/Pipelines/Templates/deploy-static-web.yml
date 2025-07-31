@@ -5,7 +5,7 @@ parameters:
   artifactName: ''
   displayName: ''
   deploymentToken: ''
-  environement: ''
+  environment: ''
 
 steps:
 - download: current
