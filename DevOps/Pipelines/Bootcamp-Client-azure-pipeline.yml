@@ -132,7 +132,7 @@ stages:
               artifactName: '$(artifactName)'
               displayName: '$(appName) INT'
               deploymentToken: '$(swa_deployment_token_int)'
-              environment: 'Int'
+              env: 'Int'
 
 
 ## -------------------------------------
@@ -213,4 +213,4 @@ stages:
              artifactName: '$(artifactName)'
              displayName: '$(appName) PROD'
              deploymentToken: '$(swa_deployment_token_prod)'
-             environment: 'Release'
+             env: 'Release'
