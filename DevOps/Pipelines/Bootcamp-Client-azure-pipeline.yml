@@ -51,11 +51,11 @@ stages:
         version: '8.0.x'
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Restore NuGet packages'
-      inputs:
-        command: 'restore'
-        projects: '$(blazorProject)'
+    # - task: DotNetCoreCLI@2
+    #   displayName: 'Restore NuGet packages'
+    #   inputs:
+    #     command: 'restore'
+    #     projects: '$(blazorProject)'
 
     - task: DotNetCoreCLI@2
       displayName: 'Build'
