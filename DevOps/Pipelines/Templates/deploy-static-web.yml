@@ -5,7 +5,6 @@ parameters:
   artifactName: ''
   displayName: ''
   deploymentToken: ''
-  env: ''
 
 steps:
 - download: current
@@ -20,6 +19,6 @@ steps:
     output_location: '' # Leave this empty - we are not building in this task
     skip_app_build: true
     skip_api_build: true
-    cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}-${{parameters.env}}'   
+    cwd: '$(Pipeline.Workspace)/${{parameters.artifactName}}'   
     azure_static_web_apps_api_token: ${{parameters.deploymentToken}}
     verbose: True

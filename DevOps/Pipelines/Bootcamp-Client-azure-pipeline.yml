@@ -51,21 +51,15 @@ stages:
         version: '8.0.x'
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
-    # - task: DotNetCoreCLI@2
-    #   displayName: 'Restore NuGet packages'
-    #   inputs:
-    #     command: 'restore'
-    #     projects: '$(blazorProject)'
-
     - task: DotNetCoreCLI@2
-      displayName: 'Build'
+      displayName: 'Build Int'
       inputs:
         command: 'build'
         projects: '$(blazorProjectName)/$(blazorProjectName).csproj'
         arguments: '--configuration Int'
 
     - task: DotNetCoreCLI@2
-      displayName: 'Build'
+      displayName: 'Build Release'
       inputs:
         command: 'build'
         projects: '$(blazorProjectName)/$(blazorProjectName).csproj'
@@ -96,7 +90,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Blazor WASM Artifact - Int'
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(blazorProjectName)'
+        targetPath: '$(Build.ArtifactStagingDirectory)/Int/$(blazorProjectName)'
         artifact: '$(artifactName)-Int'
         publishLocation: 'pipeline'
 
@@ -115,7 +109,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Blazor WASM Artifact - Release'
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/$(blazorProjectName)'
+        targetPath: '$(Build.ArtifactStagingDirectory)/Release/$(blazorProjectName)'
         artifact: '$(artifactName)-Release'
         publishLocation: 'pipeline'
 
@@ -136,10 +130,9 @@ stages:
           steps:
           - template: 'Templates/deploy-static-web.yml'
             parameters:
-              artifactName: '$(artifactName)'
+              artifactName: '$(artifactName)-Int'
               displayName: '$(appName) INT'
               deploymentToken: '$(swa_deployment_token_int)'
-              env: 'Int'
 
 
 ## -------------------------------------
@@ -217,7 +210,6 @@ stages:
          steps:
          - template: 'Templates/deploy-static-web.yml'
            parameters:
-             artifactName: '$(artifactName)'
+             artifactName: '$(artifactName)-Release'
              displayName: '$(appName) PROD'
              deploymentToken: '$(swa_deployment_token_prod)'
-             env: 'Release'
