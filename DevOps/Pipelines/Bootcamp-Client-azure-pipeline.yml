@@ -20,8 +20,8 @@ variables:
 - group: 'SYMMSOFT Bootcamp'
 - name: 'buildConfiguration'
   value: 'Release'
-- name: 'blazorProject'
-  value: 'Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj'
+- name: 'blazorProjectName'
+  value: 'Bootcamp.Client.Blazor'
 - name: 'appName'
   value: 'SYMMSOFT-Bootcamp-Client'
 - name: 'artifactName'
@@ -70,7 +70,7 @@ stages:
       inputs:
         command: 'publish'
         publishWebProjects: false
-        projects: '$(Build.SourcesDirectory)/Bootcamp.Client.Blazor/Bootcamp.Client.Blazor.csproj'
+        projects: '$(Build.SourcesDirectory)/$(blazorProjectName)/$(blazorProjectName).csproj'
         arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
         zipAfterPublish: False # We do not want a zip file published.
 
@@ -78,7 +78,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Blazor WASM Artifact'
       inputs:
-        targetPath: '$(Build.ArtifactStagingDirectory)/Bootcamp.Client.Blazor'
+        targetPath: '$(Build.ArtifactStagingDirectory)/$(blazorProjectName)'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
 

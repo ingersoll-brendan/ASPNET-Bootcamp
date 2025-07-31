@@ -5,6 +5,12 @@ public static class Constants
     #region Bootcamp API Config
 
     public const string Bootcamp_ApiHttpClientName = "BootcampAPI";
+
+    // TODO: We need to determine how to configure this for all environments?
+
+    // TODO: Use a "Compiler" Statement (i.e. #if DEV, #if INT, #if PROD, etc.
+    // Or does Blazor have AppSettings.json that can be used simaliar to Web Projects
+    // and an run time, we can load the correct ones?
     public const string Bootcamp_ApiBaseUrl = "https://localhost:7119/api/";
 
     #endregion

@@ -12,7 +12,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddHttpClient(Constants.Bootcamp_ApiHttpClientName, client =>
 {
-    client.BaseAddress = new Uri(Constants.Bootcamp_ApiBaseUrl);
+	// TODO: Use a "Compiler" Statement (i.e. #if DEV, #if INT, #if PROD, etc.
+	// Or does Blazor have AppSettings.json that can be used simaliar to Web Projects
+	// and an run time, we can load the correct ones?
+	client.BaseAddress = new Uri(Constants.Bootcamp_ApiBaseUrl);
 });
 
 builder.Services.AddSingleton<Bootcamp.Client.Blazor.Services.CustomerService>();
