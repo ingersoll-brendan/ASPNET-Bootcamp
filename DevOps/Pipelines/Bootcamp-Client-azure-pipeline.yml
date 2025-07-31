@@ -61,14 +61,14 @@ stages:
       displayName: 'Build'
       inputs:
         command: 'build'
-        projects: '$(blazorProject)'
+        projects: '$(blazorProjectName)/$(blazorProjectName).csproj'
         arguments: '--configuration Int'
 
     - task: DotNetCoreCLI@2
       displayName: 'Build'
       inputs:
         command: 'build'
-        projects: '$(blazorProject)'
+        projects: '$(blazorProjectName)/$(blazorProjectName).csproj'
         arguments: '--configuration Release'
     
     # Publish build artifacts to the staging directory (must put here before publishing to Pipeline Run directory)
