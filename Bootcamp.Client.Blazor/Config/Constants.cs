@@ -11,7 +11,7 @@ public static class Constants
 	// TODO: Use a "Compiler" Statement (i.e. #if DEV, #if INT, #if PROD, etc.
 	// Or does Blazor have AppSettings.json that can be used simaliar to Web Projects
 	// and an run time, we can load the correct ones?
-
+	//test
 #if DEBUG || DEV
 		public const string Bootcamp_ApiBaseUrl = "https://localhost:7119/api/";
 #elif INT
