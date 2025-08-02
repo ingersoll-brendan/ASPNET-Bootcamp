@@ -16,9 +16,11 @@ public static class Constants
 	//configurations ahead of time, which slows down the process. Also, it makes the CD YAML a little more complicated.
 	//Ideally I would use an appsettings.json file for each configuration (ie Dev, Int, QA, Release)
 	//There are two ways to use those appsettings files:
+
 	//OPTION 1: Add an Azure function app to the solution that is related to the client project (ie Bootcamp.Client.FunctionApp)
 	//And deploy this to the static web app resource in Azure along with the client files. This function app would expose a single
 	//API called Api/settings which returns the main web APIs base URL
+
 	//OPTION 2: During the CI process, copy all of the app settings for all environments into an "AppSettings" folder at the root
 	//at the root of the artifact, and then during the CD process copy the appropriate environment app setting into the wwwroot folder
 	//and deploy along with all of the other client files. NOTE: you need to copy using the name appsettings.json (remove the
